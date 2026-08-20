@@ -1,0 +1,10 @@
+-- Rollback initial schema
+DROP TABLE IF EXISTS audit_logs CASCADE;
+DROP TABLE IF EXISTS contract_obligations CASCADE;
+DROP TABLE IF EXISTS extracted_clauses CASCADE;
+DROP TABLE IF EXISTS documents CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS organizations CASCADE;
+
+DROP EXTENSION IF EXISTS "pgcrypto";
+DROP EXTENSION IF EXISTS "uuid-ossp";
