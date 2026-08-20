@@ -1,0 +1,41 @@
+# ─── Backend (Go) ───────────────────────────────────────────────────────────
+backend/.env
+backend/uploads/
+
+# Go binaries & build output
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+backend/bin/
+
+# Go test artifacts
+*.test
+*.out
+
+# ─── Frontend (Node / Vite) ──────────────────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/.env.local
+frontend/.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ─── OS & editor junk ────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.swo
