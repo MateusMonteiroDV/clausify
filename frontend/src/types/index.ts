@@ -106,3 +106,17 @@ export interface DashboardStats {
   pending: number;
   avg_risk_score: number;
 }
+
+export interface AuditLog {
+  id: string;
+  org_id: string;
+  actor_id?: string;
+  action: string;
+  resource_type: string;
+  resource_id: string;
+  old_value?: Record<string, unknown>;
+  new_value?: Record<string, unknown>;
+  ip_address?: string;
+  created_at: string;
+  actor?: User;
+}

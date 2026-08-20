@@ -1,5 +1,5 @@
 import api from '../lib/api';
-import type { AuthResponse, PaginatedResponse, Document, ExtractedClause, ContractObligation, DashboardStats } from '../types';
+import type { AuthResponse, PaginatedResponse, Document, ExtractedClause, ContractObligation, DashboardStats, AuditLog } from '../types';
 
 // ─── Auth ────────────────────────────────────────────────────────────────────
 export const authService = {
@@ -65,4 +65,10 @@ export const obligationService = {
     api.patch<ContractObligation>(`/obligations/${id}`, data).then((r) => r.data),
 
   delete: (id: string) => api.delete(`/obligations/${id}`),
+};
+
+// ─── Audit Logs ──────────────────────────────────────────────────────────────
+export const auditService = {
+  list: (page = 1, pageSize = 20) =>
+    api.get<PaginatedResponse<AuditLog>>(`/audit-logs?page=${page}&page_size=${pageSize}`).then((r) => r.data),
 };

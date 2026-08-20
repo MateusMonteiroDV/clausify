@@ -35,8 +35,10 @@ func Setup(db *gorm.DB, cfg *config.Config, logger *zap.Logger) *gin.Engine {
 	docRepo    := repository.NewDocumentRepository(db)
 	clauseRepo := repository.NewClauseRepository(db)
 	obligRepo  := repository.NewObligationRepository(db)
+	auditRepo  := repository.NewAuditRepository(db)
 
 	// ── Services ─────────────────────────────────────────────────────────────────
+	auditService   := service.NewAuditService(auditRepo, logger)
 	authService    := service.NewAuthService(userRepo, orgRepo, cfg, logger)
 	storageService := service.NewStorageService("uploads")
 	analysisService := service.NewAnalysisService(docRepo, clauseRepo, obligRepo, cfg.GeminiAPIKey, logger)
@@ -48,6 +50,7 @@ func Setup(db *gorm.DB, cfg *config.Config, logger *zap.Logger) *gin.Engine {
 	authCtrl   := controller.NewAuthController(authService, logger)
 	docCtrl    := controller.NewDocumentController(docService, clauseService, analysisService, logger)
 	obligCtrl  := controller.NewObligationController(obligService, logger)
+	auditCtrl  := controller.NewAuditController(auditService, logger)
 
 	// ── Health Check ─────────────────────────────────────────────────────────────
 	router.GET("/health", func(c *gin.Context) {
@@ -70,6 +73,9 @@ func Setup(db *gorm.DB, cfg *config.Config, logger *zap.Logger) *gin.Engine {
 	{
 		// Auth
 		protected.GET("/auth/me", authCtrl.Me)
+
+		// Audit Logs
+		protected.GET("/audit-logs", auditCtrl.List)
 
 		// Documents
 		docs := protected.Group("/documents")
