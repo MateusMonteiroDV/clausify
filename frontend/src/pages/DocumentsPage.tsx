@@ -10,10 +10,18 @@ export default function DocumentsPage() {
   const qc = useQueryClient();
   const [page, setPage] = useState(1);
   const [showUpload, setShowUpload] = useState(false);
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
 
   const { data, isLoading } = useQuery({
     queryKey: ['documents', page],
     queryFn: () => documentService.list(page, 20),
+  });
+
+  const filteredDocs = (data?.data ?? []).filter((doc) => {
+    const matchesSearch = doc.file_name.toLowerCase().includes(search.toLowerCase());
+    const matchesStatus = !statusFilter || doc.status === statusFilter;
+    return matchesSearch && matchesStatus;
   });
 
   const deleteMutation = useMutation({
@@ -31,7 +39,7 @@ export default function DocumentsPage() {
       <div className="page-header" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
           <h1 className="page-title">Documentos</h1>
-          <p className="page-subtitle">Gerencie e analise seus contratos</p>
+          <p className="page-subtitle">Gerencie e analise seus contratos com Inteligência Artificial</p>
         </div>
         <button id="upload-btn" className="btn btn-primary" onClick={() => setShowUpload(true)}>
           <Plus size={16} />
@@ -39,20 +47,48 @@ export default function DocumentsPage() {
         </button>
       </div>
 
+      {/* Filter & Search Bar */}
+      <div style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
+        <div style={{ flex: 1, minWidth: 240, position: 'relative' }}>
+          <input
+            type="text"
+            className="form-input"
+            placeholder="Buscar por nome do arquivo..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+        <select
+          className="form-input"
+          style={{ width: 180 }}
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="">Todos os status</option>
+          <option value="ANALYZED">Analisados</option>
+          <option value="PROCESSING">Em Processamento</option>
+          <option value="QUEUED">Na Fila</option>
+          <option value="FAILED">Falhou</option>
+        </select>
+      </div>
+
       <div className="table-container">
         <div className="table-header">
           <span className="table-title">
-            {data?.total != null && <span style={{ color: 'var(--color-text-muted)', fontWeight: 400 }}> ({data.total} total)</span>}
+            Lista de Contratos
+            {data?.total != null && <span style={{ color: 'var(--color-text-muted)', fontWeight: 400 }}> ({filteredDocs.length} exibidos)</span>}
           </span>
         </div>
 
         {isLoading ? (
           <div style={{ padding: 60, display: 'flex', justifyContent: 'center' }}><Spinner /></div>
-        ) : !data?.data?.length ? (
+        ) : !filteredDocs.length ? (
           <div className="empty-state">
             <div className="empty-state-icon"><FileText size={30} /></div>
-            <div className="empty-state-title">Nenhum documento</div>
-            <div className="empty-state-text">Faça upload de um contrato PDF para começar</div>
+            <div className="empty-state-title">Nenhum documento encontrado</div>
+            <div className="empty-state-text">
+              {search || statusFilter ? 'Tente ajustar os filtros de busca' : 'Faça upload de um contrato PDF para começar'}
+            </div>
           </div>
         ) : (
           <table>
@@ -68,7 +104,7 @@ export default function DocumentsPage() {
               </tr>
             </thead>
             <tbody>
-              {data.data.map((doc) => (
+              {filteredDocs.map((doc) => (
                 <tr key={doc.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/documents/${doc.id}`)}>
                   <td>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>

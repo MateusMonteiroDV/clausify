@@ -6,6 +6,8 @@ import DashboardPage from './pages/DashboardPage';
 import DocumentsPage from './pages/DocumentsPage';
 import DocumentDetailPage from './pages/DocumentDetailPage';
 import ObligationsPage from './pages/ObligationsPage';
+import SettingsPage from './pages/SettingsPage';
+import AuditLogPage from './pages/AuditLogPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -28,6 +30,8 @@ export default function App() {
             <Route path="/documents" element={<DocumentsPage />} />
             <Route path="/documents/:id" element={<DocumentDetailPage />} />
             <Route path="/obligations" element={<ObligationsPage />} />
+            <Route path="/audit-log" element={<AuditLogPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

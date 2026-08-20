@@ -1,11 +1,13 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, FileText, AlertTriangle, LogOut, Shield } from 'lucide-react';
+import { LayoutDashboard, FileText, AlertTriangle, Settings, Activity, LogOut, Shield } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 
 const navItems = [
   { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
   { to: '/documents', icon: FileText, label: 'Documentos' },
   { to: '/obligations', icon: AlertTriangle, label: 'Obrigações' },
+  { to: '/audit-log', icon: Activity, label: 'Auditoria' },
+  { to: '/settings', icon: Settings, label: 'Configurações' },
 ];
 
 export default function Sidebar() {
